@@ -46,8 +46,8 @@ class Session
      */
     public function start(?string $id = null): void
     {
-        if ($this->started) {
-            throw new SessionException('Сеанс не может быть запущен повторно.');
+        if ($this->isStarted()) {
+            throw new SessionException('Не удается перезапустить сеанс.');
         }
         $this->id = ($id && $this->isValidId($id)) ? $id : \session_create_id();
         if ($data = $this->sessionHandler->read($this->id)) {
@@ -74,7 +74,6 @@ class Session
 
     /**
      * @param string $key
-     *
      * @return bool
      */
     public function has(string $key): bool
@@ -84,8 +83,7 @@ class Session
 
     /**
      * @param string $key
-     * @param        $default
-     *
+     * @param $default
      * @return mixed
      */
     public function get(string $key, $default = null): mixed
@@ -95,8 +93,7 @@ class Session
 
     /**
      * @param string $key
-     * @param        $value
-     *
+     * @param $value
      * @return array
      */
     public function set(string $key, $value): array
@@ -107,7 +104,6 @@ class Session
     /**
      * @param string $key
      * @param mixed|null $default
-     *
      * @return mixed
      */
     public function pull(string $key, mixed $default = null): mixed
@@ -119,7 +115,6 @@ class Session
 
     /**
      * @param string $key
-     *
      * @return void
      */
     public function remove(string $key): void
@@ -134,6 +129,7 @@ class Session
     {
         $this->sessionHandler->destroy($this->id);
         $this->data = [];
+        $this->id = '';
     }
 
     /**
@@ -141,12 +137,11 @@ class Session
      */
     public function getId(): string
     {
-        return $this->id ?: throw new SessionException('Сеанс не запущен.');
+        return $this->id;
     }
 
     /**
      * @param string $id
-     *
      * @return void
      */
     public function setId(string $id): void
@@ -159,12 +154,19 @@ class Session
 
     /**
      * @param string $id
-     *
      * @return bool
      */
     protected function isValidId(string $id): bool
     {
         return \ctype_alnum($id);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStarted(): bool
+    {
+        return $this->started;
     }
 
 }
