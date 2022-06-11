@@ -10,11 +10,17 @@
     ],
     "require": {
         "php": "^8.0",
-        "pcore/utils": "dev-dev"
+        "pcore/utils": "dev-dev",
+        "pcore/config": "dev-dev"
     },
     "autoload": {
         "psr-4": {
             "PCore\\Session\\": "src/"
+        }
+    },
+    "extra": {
+        "pcore": {
+            "config": "PCore\\Session\\ConfigProvider"
         }
     }
 }
