@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use PCore\Session\Exceptions\SessionException;
 use PCore\Utils\Arr;
 use SessionHandlerInterface;
+use function ctype_alnum;
 
 /**
  * Class Session
@@ -32,6 +33,8 @@ class Session
     protected array $data = [];
 
     /**
+     * Проверка запущен ли сеанс
+     *
      * @var bool
      */
     protected bool $started = false;
@@ -94,11 +97,11 @@ class Session
     /**
      * @param string $key
      * @param $value
-     * @return array
+     * @return void
      */
-    public function set(string $key, $value): array
+    public function set(string $key, $value): void
     {
-        return Arr::set($this->data, $key, $value);
+        Arr::set($this->data, $key, $value);
     }
 
     /**
@@ -120,6 +123,14 @@ class Session
     public function remove(string $key): void
     {
         Arr::forget($this->data, $key);
+    }
+
+    /**
+     * Возвращает все данные сеанса
+     */
+    public function all(): array
+    {
+        return $this->data;
     }
 
     /**
@@ -153,15 +164,19 @@ class Session
     }
 
     /**
+     * Проверка является ли $id допустимым идентификатором сеанса
+     *
      * @param string $id
      * @return bool
      */
     protected function isValidId(string $id): bool
     {
-        return \ctype_alnum($id);
+        return ctype_alnum($id);
     }
 
     /**
+     * Проверка запущен ли сеанс
+     *
      * @return bool
      */
     public function isStarted(): bool
