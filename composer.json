@@ -11,8 +11,8 @@
     ],
     "require": {
         "php": "^8.0",
-        "pcore/utils": "v1.0.0",
-        "pcore/config": "v1.0.0"
+        "pcore/utils": "dev-main",
+        "pcore/config": "dev-main"
     },
     "autoload": {
         "psr-4": {
