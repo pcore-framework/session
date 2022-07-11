@@ -61,22 +61,22 @@ class RedisHandler implements SessionHandlerInterface
 
     /**
      * @param string $id
-     * @return bool|void
+     * @return bool
      */
     #[\ReturnTypeWillChange]
-    public function destroy(string $id)
+    public function destroy(string $id): bool
     {
-        $this->handler->del($id);
+        return (bool)$this->handler->del($id);
     }
 
     /**
      * @param int $max_lifetime
-     * @return bool
+     * @return int|false
      */
     #[\ReturnTypeWillChange]
-    public function gc(int $max_lifetime)
+    public function gc(int $max_lifetime): int|false
     {
-        return true;
+        return 1;
     }
 
     /**
@@ -91,12 +91,15 @@ class RedisHandler implements SessionHandlerInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     #[\ReturnTypeWillChange]
-    public function read(string $id)
+    public function read(string $id): string|false
     {
-        return $this->handler->get($id);
+        if ($data = $this->handler->get($id)) {
+            return (string)$data;
+        }
+        return false;
     }
 
     /**
@@ -105,9 +108,9 @@ class RedisHandler implements SessionHandlerInterface
      * @return void
      */
     #[\ReturnTypeWillChange]
-    public function write(string $id, string $data)
+    public function write(string $id, string $data): bool
     {
-        $this->handler->set($id, $data, $this->expire);
+        return (bool)$this->handler->set($id, $data, $this->expire);
     }
 
 }

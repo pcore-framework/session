@@ -66,7 +66,7 @@ class FileHandler implements SessionHandlerInterface
      * @return void
      */
     #[\ReturnTypeWillChange]
-    public function gc($maxLifeTime)
+    public function gc($maxLifeTime): int|false
     {
         $now = time();
         $files = $this->findFiles($this->path, function (SplFileInfo $item) use ($maxLifeTime, $now) {
@@ -75,6 +75,7 @@ class FileHandler implements SessionHandlerInterface
         foreach ($files as $file) {
             $this->unlink($file->getPathname());
         }
+        return true;
     }
 
     /**
@@ -127,7 +128,7 @@ class FileHandler implements SessionHandlerInterface
      * @param $id
      * @return string
      */
-    protected function getSessionFile($id): string
+    protected function getSessionFile(string $id): string
     {
         return rtrim($this->path, '/\\') . '/sess_' . $id;
     }
@@ -137,13 +138,12 @@ class FileHandler implements SessionHandlerInterface
      * @return false|string
      */
     #[\ReturnTypeWillChange]
-    public function read($id)
+    public function read($id): string|false
     {
         $sessionFile = $this->getSessionFile($id);
         if (file_exists($sessionFile)) {
             return file_get_contents($sessionFile) ?: '';
         }
-
         return '';
     }
 
@@ -153,9 +153,9 @@ class FileHandler implements SessionHandlerInterface
      * @return void
      */
     #[\ReturnTypeWillChange]
-    public function write($id, $data)
+    public function write($id, $data): bool
     {
-        file_put_contents($this->getSessionFile($id), $data, LOCK_EX);
+        return (bool)file_put_contents($this->getSessionFile($id), $data, LOCK_EX);
     }
 
     /**
@@ -163,7 +163,7 @@ class FileHandler implements SessionHandlerInterface
      * @throws Exception
      */
     #[\ReturnTypeWillChange]
-    public function close()
+    public function close(): bool
     {
         if (random_int(1, $this->gcDivisor) <= $this->gcProbability) {
             $this->gc($this->gcMaxLifetime);
@@ -176,9 +176,9 @@ class FileHandler implements SessionHandlerInterface
      * @return void
      */
     #[\ReturnTypeWillChange]
-    public function destroy($id)
+    public function destroy($id): bool
     {
-        $this->unlink($this->getSessionFile($id));
+        return $this->unlink($this->getSessionFile($id));
     }
 
     /**
@@ -187,7 +187,7 @@ class FileHandler implements SessionHandlerInterface
      * @return bool
      */
     #[\ReturnTypeWillChange]
-    public function open($path, $name)
+    public function open(string $path, string $name): bool
     {
         return true;
     }

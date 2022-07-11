@@ -86,7 +86,7 @@ class Session
 
     /**
      * @param string $key
-     * @param $default
+     * @param null|mixed $default
      * @return mixed
      */
     public function get(string $key, $default = null): mixed
@@ -96,7 +96,7 @@ class Session
 
     /**
      * @param string $key
-     * @param $value
+     * @param mixed $value
      * @return void
      */
     public function set(string $key, $value): void
