@@ -68,14 +68,20 @@ class FileHandler implements SessionHandlerInterface
     #[\ReturnTypeWillChange]
     public function gc($maxLifeTime): int|false
     {
-        $now = time();
-        $files = $this->findFiles($this->path, function (SplFileInfo $item) use ($maxLifeTime, $now) {
-            return $now - $maxLifeTime > $item->getMTime();
-        });
-        foreach ($files as $file) {
-            $this->unlink($file->getPathname());
+        try {
+            $number = 0;
+            $now = time();
+            $files = $this->findFiles($this->path, function (SplFileInfo $item) use ($maxLifeTime, $now) {
+                return $now - $maxLifeTime > $item->getMTime();
+            });
+            foreach ($files as $file) {
+                $this->unlink($file->getPathname());
+                $number++;
+            }
+            return $number;
+        } catch (\Throwable $throwable) {
+            return false;
         }
-        return true;
     }
 
     /**
