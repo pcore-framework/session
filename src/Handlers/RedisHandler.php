@@ -2,7 +2,7 @@
 
 namespace PCore\Session\Handlers;
 
-use PCore\Redis\{Redis, RedisManager};
+use PCore\Redis\{Redis};
 use PCore\Session\Exceptions\SessionException;
 use PCore\Utils\Traits\AutoFillProperties;
 use Psr\Container\ContainerExceptionInterface;
@@ -42,12 +42,11 @@ class RedisHandler implements SessionHandlerInterface
     public function __construct(array $options = [])
     {
         $this->fillProperties($options);
-        if (!class_exists('PCore\Redis\RedisManager')) {
+        if (!class_exists('PCore\Redis\Redis')) {
             throw new SessionException('Вам нужно будет установить пакет Redis с помощью `composer require pcore/redis`');
         }
-        /** @var RedisManager $manager */
-        $manager = make(RedisManager::class);
-        $this->handler = $manager->connection($this->connection);
+        $connector = $options['connector'];
+        $this->handler = new Redis(new $connector);
     }
 
     /**

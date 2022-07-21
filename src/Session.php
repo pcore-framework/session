@@ -39,7 +39,9 @@ class Session
      */
     protected bool $started = false;
 
-    public function __construct(protected SessionHandlerInterface $sessionHandler)
+    public function __construct(
+        protected SessionHandlerInterface $sessionHandler
+    )
     {
     }
 
@@ -89,7 +91,7 @@ class Session
      * @param null|mixed $default
      * @return mixed
      */
-    public function get(string $key, $default = null): mixed
+    public function get(string $key, mixed $default = null): mixed
     {
         return Arr::get($this->data, $key, $default);
     }
@@ -99,7 +101,7 @@ class Session
      * @param mixed $value
      * @return void
      */
-    public function set(string $key, $value): void
+    public function set(string $key, mixed $value): void
     {
         Arr::set($this->data, $key, $value);
     }
