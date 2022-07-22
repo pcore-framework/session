@@ -2,8 +2,6 @@
 
 namespace PCore\Session;
 
-use PCore\Config\Contracts\ConfigInterface;
-
 /**
  * Class SessionManager
  * @package PCore\Session
@@ -15,19 +13,12 @@ class SessionManager
     /**
      * @var array
      */
-    protected array $config = [];
-
-    /**
-     * @var array
-     */
     protected array $handlers = [];
 
-    /**
-     * @param ConfigInterface $config
-     */
-    public function __construct(ConfigInterface $config)
+    public function __construct(
+        protected array $config = []
+    )
     {
-        $this->config = $config->get('session');
     }
 
     /**

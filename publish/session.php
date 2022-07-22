@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'default' => 'file',
+    'default' => 'redis',
     'stores' => [
         'file' => [
             'handler' => 'PCore\Session\Handlers\FileHandler',
@@ -17,8 +17,10 @@ return [
         'redis' => [
             'handler' => 'PCore\Session\Handlers\RedisHandler',
             'options' => [
-                'connector' => \PCore\Redis\Connectors\BaseConnector::class,
-                'config' => []
+                'connector' => 'PCore\Redis\Connectors\BaseConnector',
+                'host' => '127.0.0.1',
+                'port' => 6379,
+                'expire' => 3600
             ]
         ]
     ]
