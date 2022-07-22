@@ -76,7 +76,7 @@ class FileHandler implements SessionHandlerInterface
             });
             foreach ($files as $file) {
                 $this->unlink($file->getPathname());
-                $number++;
+                ++$number;
             }
             return $number;
         } catch (\Throwable $throwable) {
