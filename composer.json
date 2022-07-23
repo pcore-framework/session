@@ -19,8 +19,8 @@
     ],
     "require": {
         "php": "^8.0",
-        "pcore/utils": "dev-main",
-        "pcore/redis": "dev-main"
+        "pcore/utils": "1.0.*",
+        "pcore/redis": "1.0.*"
     },
     "autoload": {
         "psr-4": {
